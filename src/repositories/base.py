@@ -45,4 +45,5 @@ class BaseRepository(ABC):
         """Return response from async post http request in json format."""
         async with aiohttp.ClientSession() as session:
             async with session.post(url, headers=headers, json=body) as response:
-                return await response.json(), response.status
+                response_json = await response.json()
+                return ResponseSchema(**response_json), response.status

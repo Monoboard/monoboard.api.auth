@@ -5,6 +5,7 @@ import datetime
 from pydantic import BaseModel, Field
 
 from schemas.base import ResponseSchema
+from schemas.user import UserIDSchema
 
 
 class TokensSchema(BaseModel):
@@ -27,19 +28,19 @@ class LoginRequestSchema(BaseModel):
         anystr_strip_whitespace = True
 
 
-class RefreshRequestSchema(BaseModel):
-    """Base model for refresh input."""
-
-    refresh_access_token: str = Field(..., min_length=10)
-
-
 class TokenRequestSchema(BaseModel):
     """Base model for refresh input."""
 
-    access_token: str = Field(..., min_length=10)
+    token: str = Field(..., min_length=10)
 
 
 class TokensResponseSchema(ResponseSchema):
     """Base model for tokens response."""
 
     data: TokensSchema
+
+
+class DecodeResponseSchema(ResponseSchema):
+    """Base model for decode response."""
+
+    data: UserIDSchema

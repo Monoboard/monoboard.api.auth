@@ -1,11 +1,17 @@
 """This module includes api endpoints for auth."""
 
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Depends
 
+from dependencies import verify_api_key
 from repositories.user import UserRepository
 from schemas.base import ResponseSchema
-from schemas.auth import LoginRequestSchema, RefreshRequestSchema, TokensResponseSchema
+from schemas.auth import (
+    LoginRequestSchema,
+    TokenRequestSchema,
+    DecodeResponseSchema,
+    TokensResponseSchema,
+)
 from utils.response import make_response
 from utils.token import generate_token, decode_token
 from exceptions import APIError, TokenError
@@ -73,19 +79,19 @@ async def login(login_input: LoginRequestSchema):
     response_model=TokensResponseSchema,
     status_code=status.HTTP_200_OK,
     responses={
-        400: {"model": ResponseSchema, "description": "Bad request"},
+        401: {"model": ResponseSchema, "description": "Unauthorized"},
         422: {"model": ResponseSchema, "description": "Validation error"},
         500: {"model": ResponseSchema, "description": "Internal Error"},
     },
 )
-def refresh(refresh_input: RefreshRequestSchema):
+def refresh(refresh_input: TokenRequestSchema):
     """Return refreshed access token for a user."""
     try:
-        payload = decode_token(refresh_input.refresh_access_token, JWT_SECRET_KEY)
+        payload = decode_token(refresh_input.token, JWT_SECRET_KEY)
     except TokenError as exc:
         return make_response(
             success=False,
-            http_status=status.HTTP_400_BAD_REQUEST,
+            http_status=status.HTTP_401_UNAUTHORIZED,
             subcode=exc.subcode,
             message=exc.message,
         )
@@ -111,4 +117,37 @@ def refresh(refresh_input: RefreshRequestSchema):
             REFRESH_ACCESS_TOKEN_KEY: refresh_token,
             REFRESH_ACCESS_TOKEN_EXP_KEY: refresh_token_exp,
         },
+    )
+
+
+@router.post(
+    "/decode",
+    response_model=ResponseSchema,
+    status_code=status.HTTP_200_OK,
+    dependencies=[Depends(verify_api_key)],
+    responses={
+        401: {"model": ResponseSchema, "description": "Unauthorized"},
+        422: {"model": ResponseSchema, "description": "Validation error"},
+        500: {"model": ResponseSchema, "description": "Internal Error"},
+    },
+)
+def decode(
+    decode_input: TokenRequestSchema,
+):
+    """Try to decode provided token."""
+    try:
+        payload = decode_token(decode_input.token, JWT_SECRET_KEY)
+    except TokenError as exc:
+        return make_response(
+            success=False,
+            http_status=status.HTTP_401_UNAUTHORIZED,
+            subcode=exc.subcode,
+            message=exc.message,
+        )
+
+    user_id = payload[ID_KEY]
+    return DecodeResponseSchema(
+        success=True,
+        message="Token was successfully decoded",
+        data={ID_KEY: user_id},
     )

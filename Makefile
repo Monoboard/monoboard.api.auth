@@ -1,4 +1,6 @@
 lint:
 	black --config black.toml src/
 build:
-	docker build -t <TODO: service name> .
+	docker build -t petrushynskyi/monoboard.api.auth .
+publish:
+	docker push petrushynskyi/monoboard.api.auth:latest

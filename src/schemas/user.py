@@ -14,3 +14,9 @@ class UserSchema(BaseModel):
     first_name: Union[str, None]
     last_name: Union[str, None]
     created_date: datetime.datetime
+
+
+class UserIDSchema(BaseModel):
+    """Base model of user id schema."""
+
+    id: uuid.UUID = Field(default_factory=uuid.uuid4)
