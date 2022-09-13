@@ -1,1 +1,1 @@
-black
+black==22.8.0
