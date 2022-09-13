@@ -13,4 +13,10 @@ REFRESH_JWT_EXP_DAYS = int(os.getenv("REFRESH_JWT_EXP_DAYS", "30"))
 JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 
 # API keys
-INTERNAL_API_KEYS = {"monoboard.api.user": os.getenv("AUTH_USER_API_KEY")}
+INTERNAL_CONFIGS = {
+    "monoboard.api.user": {
+        "api_key": os.getenv("AUTH_USER_API_KEY"),
+        "api_host": os.getenv("MONOBOARD_API_USER_HOST"),
+        "api_port": os.getenv("MONOBOARD_API_USER_PORT"),
+    }
+}
