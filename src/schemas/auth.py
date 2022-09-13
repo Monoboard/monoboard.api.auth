@@ -7,8 +7,8 @@ from pydantic import BaseModel, Field
 from schemas.base import ResponseSchema
 
 
-class LoginSchema(BaseModel):
-    """Base model for login schema."""
+class TokensSchema(BaseModel):
+    """Base model for tokens schema."""
 
     access_token: str
     access_token_exp: datetime.datetime
@@ -27,7 +27,19 @@ class LoginRequestSchema(BaseModel):
         anystr_strip_whitespace = True
 
 
-class LoginResponseSchema(ResponseSchema):
-    """Base model for login response."""
+class RefreshRequestSchema(BaseModel):
+    """Base model for refresh input."""
 
-    data: LoginSchema
+    refresh_access_token: str = Field(..., min_length=10)
+
+
+class TokenRequestSchema(BaseModel):
+    """Base model for refresh input."""
+
+    access_token: str = Field(..., min_length=10)
+
+
+class TokensResponseSchema(ResponseSchema):
+    """Base model for tokens response."""
+
+    data: TokensSchema

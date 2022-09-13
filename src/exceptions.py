@@ -8,10 +8,11 @@ from http import HTTPStatus
 class BaseError(Exception):
     """Class that represents base error."""
 
-    def __init__(self, message: str = None):
+    def __init__(self, message: str = None, subcode: str = None):
         """Initialize base custom error."""
         super().__init__()
         self.message = message
+        self.subcode = subcode
 
     def __str__(self):
         """Return message for str method."""

@@ -10,3 +10,6 @@ REFRESH_ACCESS_TOKEN_EXP_KEY = "refresh_access_token_exp"
 
 X_AUTH_HEADER_KEY = "X-AUTH"
 X_FROM_NAME_HEADER_KEY = "X-FROM-NAME"
+
+TOKEN_EXPIRED_SUBCODE = "token_expired"
+TOKEN_INVALID_SUBCODE = "token_invalid"
