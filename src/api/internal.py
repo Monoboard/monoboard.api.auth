@@ -25,7 +25,7 @@ def health():
         success=True,
         message=HTTPStatus.OK.phrase,
         http_status=HTTPStatus.OK,
-        data={"service": APP_NAME, "date": datetime.now().isoformat()}
+        data={"service": APP_NAME, "date": datetime.now().isoformat()},
     )
 
 

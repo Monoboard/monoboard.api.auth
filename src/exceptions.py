@@ -1,5 +1,9 @@
 """This module includes custom errors."""
 
+from typing import Union
+
+from http import HTTPStatus
+
 
 class BaseError(Exception):
     """Class that represents base error."""
@@ -24,3 +28,21 @@ class TokenError(BaseError):
 
 class RetryError(BaseError):
     """Class that represents errors caused for retry."""
+
+
+class APIError(BaseError):
+    """Class that represents errors caused during api requests."""
+
+    def __init__(
+        self,
+        status_code: HTTPStatus,
+        message: str = None,
+        subcode: str = None,
+        data: Union[dict, list] = None,
+    ):
+        """Initialize base custom error."""
+        super().__init__()
+        self.message = message
+        self.subcode = subcode
+        self.data = data
+        self.status_code = status_code

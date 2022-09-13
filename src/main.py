@@ -3,12 +3,14 @@
 from fastapi import FastAPI, status
 from fastapi.exceptions import RequestValidationError
 
+from api.auth import router as auth_router
 from api.internal import router as internal_router, handle_404, handle_405, handle_401, handle_validation_error
 from settings import APP_NAME
 
 app = FastAPI(title=APP_NAME)
 
 app.include_router(internal_router)
+app.include_router(auth_router, prefix="/api/v1", tags=["auth"])
 
 app.add_exception_handler(status.HTTP_401_UNAUTHORIZED, handle_401)
 app.add_exception_handler(status.HTTP_404_NOT_FOUND, handle_404)
